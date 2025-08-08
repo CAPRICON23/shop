@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nursashop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #42a5f5 0%, #2196f3 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #29b6f6 0%, #0288d1 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(2, 136, 209, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(2, 136, 209, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .cart-btn {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #f44336;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(33, 150, 243, 0.25);
+            border-color: #42a5f5;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: #e1f5fe;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #0288d1;
+            border: 2px dashed #42a5f5;
+        }
+
+        .product-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 12px;
+        }
+
+        .product-price {
+            font-size: 1.3em;
+            color: #388e3c;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e3f2fd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #42a5f5;
+        }
+
+        .cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .cart-total {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1976d2;
+            text-align: right;
+            margin: 20px 0;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+        }
+
+        .admin-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .product-table th, .product-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .product-table th {
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: bold;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            margin: 2px;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .btn-warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #f57c00;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: #42a5f5;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .quantity-btn:hover {
+            background: #2196f3;
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            border: 2px solid #e3f2fd;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10% 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Nursashop</div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary cart-btn" onclick="showCart()">
+                    🛒 Keranjang
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="btn btn-primary" onclick="showAdminLogin()">Admin Login</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Main Products Section -->
+        <div id="mainSection">
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="hidden">
+            <div class="admin-panel">
+                <h2 style="color: #1976d2; margin-bottom: 30px;">Admin Panel - Kelola Produk</h2>
+                
+                <button class="btn btn-primary" onclick="showAddProductForm()">➕ Tambah Produk Baru</button>
+                <button class="btn btn-secondary" onclick="showMainSection()">⬅️ Kembali ke Toko</button>
+                <button class="btn btn-warning" onclick="logoutAdmin()">🚪 Logout Admin</button>
+                
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Nama Produk</th>
+                            <th>Harga</th>
+                            <th>Deskripsi</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminProductsTable">
+                        <!-- Admin products will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('adminLoginModal')">&times;</span>
+            <h2 style="color: #1976d2; margin-bottom: 20px;">Admin Login</h2>
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" id="adminUsername" placeholder="Masukkan username">
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <div style="position: relative;">
+                    <input type="password" id="adminPassword" placeholder="Masukkan password">
+                    <button type="button" onclick="togglePassword()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 18px;">👁</button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="adminLogin()">Login</button>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('productModal')">&times;</span>
+            <h2 id="productModalTitle" style="color: #1976d2; margin-bottom: 20px;">Tambah Produk</h2>
+            <form onsubmit="saveProduct(event)">
+                <div class="form-group">
+                    <label>Nama Produk:</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label>Harga:</label>
+                    <input type="number" id="productPrice" required>
+                </div>
+                <div class="form-group">
+                    <label>URL Foto Produk:</label>
+                    <input type="url" id="productImage" placeholder="https://example.com/image.jpg">
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi:</label>
+                    <textarea id="productDescription" rows="4" required></textarea>
+                </div>
+                <input type="hidden" id="editingProductId">
+                <button type="submit" class="btn btn-primary">Simpan Produk</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cartModal')">&times;</span>
+            <h2 style="color: #1976d2; margin-bottom: 20px;">Keranjang Belanja</h2>
+            <div id="cartItems">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="cart-total" id="cartTotal">Total: Rp 0</div>
+            
+            <div class="form-group">
+                <label>Nama Lengkap:</label>
+                <input type="text" id="customerName" required>
+            </div>
+            <div class="form-group">
+                <label>Alamat Pengiriman:</label>
+                <textarea id="customerAddress" rows="3" placeholder="Masukkan alamat lengkap..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label>No. Telepon:</label>
+                <input type="tel" id="customerPhone" required>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="orderViaWhatsApp()">Pesan via WhatsApp</button>
+                <button class="btn btn-primary" onclick="orderViaTelegram()">Pesan via Telegram</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let products = [
+            {
+                id: 1,
+                name: "Contoh Produk 1",
+                price: 50000,
+                image: "",
+                description: "Deskripsi produk contoh yang menarik dan berkualitas tinggi."
+            },
+            {
+                id: 2,
+                name: "Contoh Produk 2",
+                price: 75000,
+                image: "",
+                description: "Produk berkualitas dengan harga terjangkau dan pelayanan terbaik."
+            }
+        ];
+        
+        let cart = [];
+        let isAdminLoggedIn = false;
+        let nextProductId = 3;
+
+        // Initialize the website
+        function init() {
+            loadProducts();
+            updateCartCount();
+        }
+
+        // Load and display products
+        function loadProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        ${product.image ? `<img src="${product.image}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;border-radius:15px;">` : `Foto ${product.name}`}
+                    </div>
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">Rp ${product.price.toLocaleString('id-ID')}</div>
+                    <div class="product-description">${product.description}</div>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="changeQuantity(${product.id}, -1)">-</button>
+                        <input type="number" class="quantity-input" id="qty-${product.id}" value="1" min="1">
+                        <button class="quantity-btn" onclick="changeQuantity(${product.id}, 1)">+</button>
+                    </div>
+                    <button class="btn btn-primary" onclick="addToCart(${product.id})">🛒 Pesan Produk</button>
+                `;
+                grid.appendChild(productCard);
+            });
+        }
+
+        // Load products for admin table
+        function loadAdminProducts() {
+            const tbody = document.getElementById('adminProductsTable');
+            tbody.innerHTML = '';
+            
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>Rp ${product.price.toLocaleString('id-ID')}</td>
+                    <td>${product.description.substring(0, 50)}...</td>
+                    <td>
+                        <button class="btn btn-warning btn-small" onclick="editProduct(${product.id})">Edit</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteProduct(${product.id})">Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Quantity controls
+        function changeQuantity(productId, change) {
+            const qtyInput = document.getElementById(`qty-${productId}`);
+            let newQty = parseInt(qtyInput.value) + change;
+            if (newQty < 1) newQty = 1;
+            qtyInput.value = newQty;
+        }
+
+        // Add to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const quantity = parseInt(document.getElementById(`qty-${productId}`).value);
+            
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: quantity
+                });
+            }
+            
+            updateCartCount();
+            alert(`${product.name} berhasil ditambahkan ke keranjang!`);
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        // Show cart
+        function showCart() {
+            if (cart.length === 0) {
+                alert('Keranjang belanja kosong!');
+                return;
+            }
+            
+            const cartItemsDiv = document.getElementById('cartItems');
+            cartItemsDiv.innerHTML = '';
+            
+            let total = 0;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        Rp ${item.price.toLocaleString('id-ID')} x ${item.quantity}
+                    </div>
+                    <div>
+                        <strong>Rp ${itemTotal.toLocaleString('id-ID')}</strong>
+                        <button class="btn btn-danger btn-small" onclick="removeFromCart(${item.id})">Hapus</button>
+                    </div>
+                `;
+                cartItemsDiv.appendChild(cartItem);
+            });
+            
+            document.getElementById('cartTotal').textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
+            document.getElementById('cartModal').style.display = 'block';
+        }
+
+        // Remove from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            showCart();
+        }
+
+        // Order via WhatsApp
+        function orderViaWhatsApp() {
+            const name = document.getElementById('customerName').value;
+            const address = document.getElementById('customerAddress').value;
+            const phone = document.getElementById('customerPhone').value;
+            
+            if (!name || !address || !phone) {
+                alert('Mohon lengkapi semua data!');
+                return;
+            }
+            
+            let message = `*PESANAN NURSASHOP*\n\n`;
+            message += `Nama: ${name}\n`;
+            message += `Alamat: ${address}\n`;
+            message += `No. HP: ${phone}\n\n`;
+            message += `*Detail Pesanan:*\n`;
+            
+            let total = 0;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                message += `• ${item.name}\n  ${item.quantity}x Rp${item.price.toLocaleString('id-ID')} = Rp${itemTotal.toLocaleString('id-ID')}\n\n`;
+            });
+            
+            message += `hallo admin saya telah menambahkan produk dengan : 🙏`; 
+            message += `*Total: Rp${total.toLocaleString('id-ID')}*\n\n`;
+            message += `saya ingin melakukan pembayaran 🙏`; 
+          
+            
+            const whatsappUrl =`https://wa.me/+6282218603483?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            
+            // Clear cart after order
+            cart = [];
+            updateCartCount();
+            closeModal('cartModal');
+        }
+
+        // Order via Telegram
+        function orderViaTelegram() {
+            const name = document.getElementById('customerName').value;
+            const address = document.getElementById('customerAddress').value;
+            const phone = document.getElementById('customerPhone').value;
+            
+            if (!name || !address || !phone) {
+                alert('Mohon lengkapi semua data!');
+                return;
+            }
+            
+            let message = `PESANAN NURSASHOP\n\n`;
+            message += `Nama: ${name}\n`;
+            message += `Alamat: ${address}\n`;
+            message += `No. HP: ${phone}\n\n`;
+            message += `Detail Pesanan:\n`;
+            
+            let total = 0;
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                message += `• ${item.name}\n  ${item.quantity}x Rp${item.price.toLocaleString('id-ID')} = Rp${itemTotal.toLocaleString('id-ID')}\n\n`;
+            });
+            
+            message += `Total: Rp${total.toLocaleString('id-ID')}\n\n`;
+            message += `Terima kasih telah berbelanja di Nursashop!`;
+            
+            const telegramUrl = `https://t.me/+6282218603483?text=${encodeURIComponent(message)}`;
+            window.open(telegramUrl, '_blank');
+            
+            // Clear cart after order
+            cart = [];
+            updateCartCount();
+            closeModal('cartModal');
+        }
+
+        // Toggle password visibility
+        function togglePassword() {
+            const passwordInput = document.getElementById('adminPassword');
+            const eyeButton = passwordInput.nextElementSibling;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeButton.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                eyeButton.textContent = '👁';
+            }
+        }
+
+        // Admin functions
+        function showAdminLogin() {
+            document.getElementById('adminLoginModal').style.display = 'block';
+        }
+
+        function adminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (!username || !password) {
+                alert('❌ Mohon isi username dan password!');
+                return;
+            }
+            
+            // Validasi login
+            if (username === 'nursashop' && password === 'IndonesiA45') {
+                isAdminLoggedIn = true;
+                closeModal('adminLoginModal');
+                showAdminPanel();
+                alert('✅ Login berhasil! Selamat datang di Panel Admin');
+            } else {
+                alert('❌ Username atau password salah!');
+            }
+        }
+
+        function showAdminPanel() {
+            if (!isAdminLoggedIn) {
+                alert('❌ Silakan login terlebih dahulu!');
+                showAdminLogin();
+                return;
+            }
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            loadAdminProducts();
+        }
+
+        function showMainSection() {
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('mainSection').classList.remove('hidden');
+        }
+
+        function showAddProductForm() {
+            if (!isAdminLoggedIn) {
+                alert('❌ Silakan login terlebih dahulu!');
+                return;
+            }
+            document.getElementById('productModalTitle').textContent = 'Tambah Produk';
+            document.getElementById('productName').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productImage').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('editingProductId').value = '';
+            document.getElementById('productModal').style.display = 'block';
+        }
+
+        function editProduct(productId) {
+            if (!isAdminLoggedIn) {
+                alert('❌ Silakan login terlebih dahulu!');
+                return;
+            }
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                alert('❌ Produk tidak ditemukan!');
+                return;
+            }
+            document.getElementById('productModalTitle').textContent = 'Edit Produk';
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productImage').value = product.image || '';
+            document.getElementById('productDescription').value = product.description;
+            document.getElementById('editingProductId').value = productId;
+            document.getElementById('productModal').style.display = 'block';
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            
+            if (!isAdminLoggedIn) {
+                alert('❌ Silakan login terlebih dahulu!');
+                return;
+            }
+            
+            const name = document.getElementById('productName').value.trim();
+            const price = parseInt(document.getElementById('productPrice').value);
+            const image = document.getElementById('productImage').value.trim();
+            const description = document.getElementById('productDescription').value.trim();
+            const editingId = document.getElementById('editingProductId').value;
+            
+            // Validasi input
+            if (!name || !price || !description) {
+                alert('❌ Mohon lengkapi semua field yang wajib diisi!');
+                return;
+            }
+            
+            if (price <= 0) {
+                alert('❌ Harga harus lebih besar dari 0!');
+                return;
+            }
+            
+            if (editingId) {
+                // Edit existing product
+                const productIndex = products.findIndex(p => p.id == editingId);
+                if (productIndex !== -1) {
+                    products[productIndex] = {
+                        id: parseInt(editingId),
+                        name, price, image, description
+                    };
+                    alert('✅ Produk berhasil diperbarui!');
+                } else {
+                    alert('❌ Produk tidak ditemukan!');
+                    return;
+                }
+            } else {
+                // Add new product
+                products.push({
+                    id: nextProductId++,
+                    name, price, image, description
+                });
+                alert('✅ Produk berhasil ditambahkan!');
+            }
+            
+            closeModal('productModal');
+            loadAdminProducts();
+            loadProducts();
+        }
+
+        function deleteProduct(productId) {
+            if (!isAdminLoggedIn) {
+                alert('❌ Silakan login terlebih dahulu!');
+                return;
+            }
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                alert('❌ Produk tidak ditemukan!');
+                return;
+            }
+            
+            if (confirm(`Yakin ingin menghapus produk "${product.name}"?`)) {
+                products = products.filter(p => p.id !== productId);
+                loadAdminProducts();
+                loadProducts();
+                alert('✅ Produk berhasil dihapus!');
+            }
+        }
+
+        // Modal functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Logout admin function
+        function logoutAdmin() {
+            if (confirm('Yakin ingin logout dari admin panel?')) {
+                isAdminLoggedIn = false;
+                showMainSection();
+                // Clear login form
+                document.getElementById('adminUsername').value = '';
+                document.getElementById('adminPassword').value = '';
+                alert('✅ Berhasil logout dari admin panel');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+
+        // Initialize the website when page loads
+        window.onload = init;
+    </script>
+</body>
+</html>
